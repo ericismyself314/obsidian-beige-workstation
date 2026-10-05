@@ -1,0 +1,238 @@
+/* 蛋蛋世界观：首页工作台。仅作用于 cssclasses: dashboard-home 的笔记。 */
+
+.dashboard-home {
+  --file-line-width: 1160px;
+  --home-amber: #8f8272;
+  --home-blue: #a69b8d;
+  --home-violet: #b8aea0;
+  --home-green: #827c70;
+  --home-card: color-mix(in srgb, var(--background-primary-alt) 88%, transparent);
+}
+
+.dashboard-home .markdown-preview-sizer,
+.dashboard-home .cm-sizer {
+  max-width: 1160px;
+}
+
+.dashboard-home .inline-title,
+.dashboard-home .metadata-container {
+  display: none;
+}
+
+.dashboard-home h1 {
+  margin: 0.6rem 0 0.35rem;
+  font-size: clamp(2.15rem, 5vw, 3.7rem);
+  line-height: 1.05;
+  letter-spacing: -0.045em;
+  background: none;
+  color: var(--text-normal);
+}
+
+.dashboard-home h2 {
+  margin: 2rem 0 0.8rem;
+  padding-bottom: 0.45rem;
+  border-bottom: 1px solid var(--background-modifier-border);
+  font-size: 1.25rem;
+}
+
+.dashboard-home .callout {
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 16px;
+  background: var(--home-card);
+  box-shadow: 0 8px 26px rgb(0 0 0 / 6%);
+  transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
+}
+
+.dashboard-home .callout:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 32px rgb(0 0 0 / 9%);
+}
+
+.dashboard-home .callout[data-callout="quote"] {
+  margin: 0.35rem 0 1rem;
+  background: linear-gradient(120deg, color-mix(in srgb, var(--home-amber) 14%, transparent), transparent 76%);
+  box-shadow: none;
+}
+
+.dashboard-home .callout[data-callout="quick"] {
+  --callout-color: 143, 130, 114;
+  margin: 1rem 0 1.25rem;
+  background: linear-gradient(135deg, color-mix(in srgb, var(--home-amber) 10%, var(--background-primary-alt)), var(--background-primary-alt));
+}
+
+.dashboard-home .callout[data-callout="quick"] .callout-content > ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  margin: 0.55rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.dashboard-home .callout[data-callout="quick"] li {
+  margin: 0;
+}
+
+.dashboard-home .callout[data-callout="quick"] a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.25rem;
+  padding: 0.35rem 0.8rem;
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 999px;
+  background: var(--background-primary);
+  text-decoration: none;
+}
+
+.dashboard-home .callout[data-callout="multi-column"] {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.dashboard-home .callout[data-callout="multi-column"]:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+.dashboard-home .callout[data-callout="multi-column"] > .callout-title {
+  display: none;
+}
+
+.dashboard-home .callout[data-callout="multi-column"] > .callout-content {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  padding: 0;
+}
+
+.dashboard-home .callout[data-callout="multi-column"] > .callout-content > .callout {
+  min-width: 0;
+  margin: 0;
+}
+
+.dashboard-home .callout[data-callout="research"] {
+  --callout-color: 143, 130, 114;
+  border-top: 4px solid var(--home-amber);
+}
+
+.dashboard-home .callout[data-callout="doing"] {
+  --callout-color: 166, 155, 141;
+  border-top: 4px solid var(--home-blue);
+}
+
+.dashboard-home .callout[data-callout="future"] {
+  --callout-color: 184, 174, 160;
+  margin: 1rem 0;
+  border-top: 4px solid var(--home-violet);
+}
+
+.dashboard-home .callout[data-callout="todo"] {
+  --callout-color: 130, 124, 112;
+}
+
+.dashboard-home .callout[data-callout="calendar"] {
+  --callout-color: 166, 155, 141;
+}
+
+.dashboard-home .callout-title {
+  font-weight: 700;
+}
+
+.dashboard-home .callout-content > p:first-child {
+  color: var(--text-muted);
+}
+
+.dashboard-home .internal-link {
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.dashboard-home .internal-embed.is-loaded {
+  margin-block: 0.7rem;
+  border: 0;
+}
+
+.dashboard-home .bases-embed,
+.dashboard-home .bases-view {
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.dashboard-home .home-stat-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin: 0.75rem 0 1rem;
+}
+
+.dashboard-home .home-stat {
+  padding: 0.85rem 0.75rem;
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 14px;
+  background: var(--home-card);
+  text-align: center;
+}
+
+.dashboard-home .home-stat-value {
+  color: var(--home-amber);
+  font-size: 1.75rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.dashboard-home .home-stat-label {
+  margin-top: 0.35rem;
+  color: var(--text-muted);
+  font-size: 0.78rem;
+}
+
+.dashboard-home .block-language-dataview,
+.dashboard-home .block-language-dataviewjs,
+.dashboard-home .block-language-tasks {
+  padding: 0.25rem 0.75rem;
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 14px;
+  background: var(--background-secondary);
+}
+
+.dashboard-home .dataview.table-view-table {
+  width: 100%;
+}
+
+.dashboard-home .task-list-item.is-checked {
+  opacity: 0.58;
+}
+
+.dashboard-home hr {
+  margin-block: 2rem 1rem;
+}
+
+@media (max-width: 800px) {
+  .dashboard-home .callout[data-callout="multi-column"] > .callout-content {
+    grid-template-columns: 1fr;
+  }
+
+  .dashboard-home .home-stat-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 480px) {
+  .dashboard-home h1 {
+    font-size: 2.25rem;
+  }
+
+  .dashboard-home .home-stat-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .dashboard-home .callout {
+    border-radius: 13px;
+  }
+}
+
+
+

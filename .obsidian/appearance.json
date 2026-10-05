@@ -1,0 +1,9 @@
+{
+  "accentColor": "#75695c",
+  "cssTheme": "Maple",
+  "enabledCssSnippets": [
+    "codex-homepage",
+    "beige-workstation"
+  ],
+  "theme": "moonstone"
+}

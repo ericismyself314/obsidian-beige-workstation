@@ -1,0 +1,8 @@
+*
+!.gitignore
+!README.md
+!.obsidian/
+!.obsidian/**
+.obsidian/plugins/dandan-workstation-home/data.json
+.obsidian/workspace.json
+.obsidian/backups/

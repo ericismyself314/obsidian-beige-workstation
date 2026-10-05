@@ -1,0 +1,23 @@
+{
+  "name": "dandan-workstation-home",
+  "version": "0.3.0",
+  "description": "简约个人工作站：首页灵感与待办排序、日记日历、每日属性模板和每周回顾。",
+  "main": "main.js",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "build": "node esbuild.config.mjs"
+  },
+  "keywords": [
+    "obsidian",
+    "homepage",
+    "workstation"
+  ],
+  "author": "蛋蛋世界观",
+  "license": "MIT",
+  "devDependencies": {
+    "obsidian": "^1.7.2",
+    "esbuild": "^0.23.1",
+    "typescript": "^5.5.4",
+    "builtin-modules": "^4.0.0"
+  }
+}
