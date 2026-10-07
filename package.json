@@ -1,0 +1,16 @@
+{
+  "name": "zhijian",
+  "version": "0.4.0",
+  "private": true,
+  "description": "纸面风格的个人工作台：灵感、待办、工作进展、自动翻纸首页与六项日记，支持白色和黑色主题。",
+  "scripts": {
+    "build": "node .obsidian/plugins/dandan-workstation-home/build-paper-journal.cjs",
+    "check": "node --check .obsidian/plugins/dandan-workstation-home/main.js",
+    "test": "node tests/journal.test.cjs",
+    "test:ui": "node tests/browser.test.cjs"
+  },
+  "devDependencies": {
+    "yaml": "^2.8.0",
+    "playwright": "^1.56.0"
+  }
+}

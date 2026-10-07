@@ -1,0 +1,71 @@
+const fs=require('fs'),path=require('path');
+const {chromium}=require('playwright');
+const out=path.resolve(__dirname,'../.artifacts');fs.mkdirSync(out,{recursive:true});
+const pluginDir=path.resolve(__dirname,'../.obsidian/plugins/dandan-workstation-home');
+const css=['styles.css','beige-workstation.css','paper-journal.css','home-paper.css','home-paging.css'].map(n=>fs.readFileSync(path.join(n==='beige-workstation.css'?path.resolve(__dirname,'../.obsidian/snippets'):pluginDir,n),'utf8')).join('\n');
+const shim='html,body{margin:0;height:100%;font-family:"Segoe UI",sans-serif;}#app,.workspace-leaf,.view-content{height:100%;}.view-header{display:none}button,input,textarea{font:inherit}button{cursor:pointer}input,textarea{box-sizing:border-box}input{height:32px} .dwh-btn{display:inline-flex;align-items:center;gap:6px}';
+const html='<!DOCTYPE html><meta charset="utf-8"><style>'+shim+'\n'+css+'</style><body class="theme-dark"><div id="app"></div></body>';
+fs.writeFileSync(path.join(out,'preview.html'),html);
+(async()=>{
+let browser;try{browser=await chromium.launch({headless:true,channel:'msedge'})}catch{browser=await chromium.launch({headless:true})}
+const page=await browser.newPage({viewport:{width:1600,height:1100},deviceScaleFactor:1});const errors=[];page.on('pageerror',e=>errors.push(e.message));
+await page.setContent(html);await page.addScriptTag({content:fs.readFileSync(path.join(__dirname,'browser-fixture.js'),'utf8')});
+await page.addScriptTag({content:fs.readFileSync(path.join(pluginDir,'main.js'),'utf8')+'\nwindow.realPlugin = new WorkstationHomePlugin();'});
+await page.evaluate(async()=>{await realPlugin.onload();await realPlugin.activateJournal('日记/2026-10-06.md')});
+await page.waitForSelector('.dwh-journal__sheet');await page.waitForTimeout(150);console.log('Sizes',await page.locator('.dwh-journal__writing').evaluateAll(es=>es.map(e=>({height:e.style.height,scroll:e.scrollHeight,font:getComputedStyle(e).lineHeight,min:getComputedStyle(e).minHeight}))));await page.screenshot({path:path.join(out,'日记页面-亮色.png'),fullPage:true});
+const headingLabels=['标题','心情','天气','今天有什么要写的','今天学到的东西','今天有什么要反思的'];for(const label of headingLabels)if(await page.getByRole('textbox',{name:label,exact:true}).count()!==1)throw Error('Missing '+label);
+await page.getByRole('textbox',{name:'天气',exact:true}).fill('手写：阴，微风');await page.waitForTimeout(1100);
+const saved=await page.evaluate(()=>fixture.files.get('日记/2026-10-06.md').text);if(!saved.includes('手写：阴，微风'))throw Error('autosave failed');
+await page.getByRole('button',{name:'2026-10-05',exact:false}).click();await page.waitForTimeout(100);if(!await page.locator('.dwh-journal__date').textContent().then(s=>s.includes('10月5日')))throw Error('navigation failed');
+await page.getByRole('button',{name:'下一篇 ›'}).click();await page.waitForTimeout(100);
+await page.getByRole('slider',{name:'外观模式'}).focus();await page.keyboard.press('ArrowRight');await page.waitForTimeout(300);await page.screenshot({path:path.join(out,'日记页面-暗色.png'),fullPage:true});
+const color=await page.locator('.dwh-journal__paper').evaluate(e=>getComputedStyle(e).backgroundColor);if(color!=='rgb(48, 48, 46)')throw Error('dark theme '+color);
+await page.evaluate(async()=>{await realPlugin.setAppearance('mode','light');await realPlugin.activateHome()});await page.waitForTimeout(300);await page.screenshot({path:path.join(out,'首页-主题切换.png'),fullPage:true});
+if(await page.locator('.dwh-appearance').count()!==1)throw Error('home appearance missing');
+if(await page.locator('.dwh-progress-step').count()!==5)throw Error('Existing progress steps lost');
+const slider=page.getByRole('slider',{name:'外观模式'});const box=await slider.boundingBox();
+if(await page.getByRole('slider').count()!==1 || await page.getByText('纸色',{exact:true}).count()!==0)throw Error('Extra appearance choices remain');
+await page.mouse.move(box.x+45,box.y+box.height/2);await page.mouse.down();await page.mouse.move(box.x+box.width*.75,box.y+box.height/2,{steps:8});await page.mouse.up();await page.waitForTimeout(350);
+if(await slider.getAttribute('aria-valuetext')!=='黑色')throw Error('Drag selection failed');
+const panelColor=await page.locator('.dwh-panel').first().evaluate(e=>getComputedStyle(e).backgroundColor);if(panelColor!=='rgb(48, 48, 46)')throw Error('Dark home panel '+panelColor);
+await page.screenshot({path:path.join(out,'首页-暗色.png'),fullPage:true});await page.locator('.dwh-appearance').screenshot({path:path.join(out,'外观选择-暗色.png')});
+await slider.focus();await page.keyboard.press('ArrowRight');if(await slider.getAttribute('aria-valuenow')!=='1')throw Error('Unwanted third mode');
+await page.keyboard.press('ArrowLeft');await page.waitForTimeout(300);
+if(await slider.getAttribute('aria-valuetext')!=='白色')throw Error('Keyboard failed');
+const prefs=await page.evaluate(()=>JSON.parse(fixture.store['.obsidian/plugins/dandan-workstation-home/appearance-preferences.json']));
+if(prefs.mode!=='light'||Object.keys(prefs).length!==1)throw Error('Persistence contains extra choices');
+await page.locator('.dwh-appearance').screenshot({path:path.join(out,'外观选择-亮色.png')});
+// 大量内容自动翻纸，刷新保持页码和输入草稿。
+await page.evaluate(()=>{
+ realPlugin.data.inspirations=Array.from({length:24},(_,i)=>({id:'many-i'+i,text:i===1?'很长的灵感。'.repeat(90):'灵感记录 '+i,order:i}));
+ realPlugin.data.todos=Array.from({length:22},(_,i)=>({id:'many-t'+i,text:'待办事项 '+i,order:i,completed:false}));
+ realPlugin.data.documentLines=Array.from({length:6},(_,i)=>({id:'many-w'+i,title:'项目 '+i,order:i,documentPaths:[],steps:Array.from({length:8},(_,j)=>({id:'step'+j,text:'进展 '+j}))}));
+ realPlugin.refreshHomeViews();
+});await page.waitForTimeout(300);
+await page.getByRole('button',{name:'下一张灵感',exact:true}).click();
+const beforeCount=await page.locator('.dwh-inspiration .dwh-paper-page-count').textContent();
+await page.locator('.dwh-inspiration__input').fill('还没有提交的草稿');
+await page.evaluate(()=>{realPlugin.data.inspirations.push({id:'extra',text:'后台新增',order:25});realPlugin.refreshHomeViews();});await page.waitForTimeout(100);
+if(await page.locator('.dwh-inspiration__input').inputValue()!=='还没有提交的草稿')throw Error('Draft lost on refresh');
+await page.locator('.dwh-inspiration__input').blur();await page.waitForTimeout(200);
+if((await page.locator('.dwh-inspiration .dwh-paper-page-count').textContent()).split('/')[0]!==beforeCount.split('/')[0])throw Error('Page jumped on addition');
+await page.locator('.dwh-inspiration__input').fill('提交的灵感');await page.locator('.dwh-inspiration__input').press('Enter');await page.waitForTimeout(200);if(await page.locator('.dwh-inspiration__input').inputValue()!=='')throw Error('Submitted draft retained');
+await page.locator('.dwh-todo__input').fill('提交的待办');await page.locator('.dwh-todo__input').press('Enter');await page.waitForTimeout(200);if(await page.locator('.dwh-todo__input').inputValue()!=='')throw Error('Submitted todo retained');
+await page.locator('.dwh-inspiration-card:not([hidden]) .dwh-paper-expand').first().click();await page.waitForSelector('dialog[open]');await page.getByRole('textbox',{name:'灵感',exact:true}).fill('在完整纸页中编辑');await page.locator('dialog').getByRole('button',{name:'保存',exact:true}).click();await page.waitForTimeout(200);if(await page.locator('dialog').count())throw Error('Expanded paper did not close');
+await page.locator('.dwh-paper-work-list .dwh-document-line:not([hidden]) .dwh-paper-expand').first().click();await page.waitForSelector('dialog[open]');if(await page.locator('dialog .dwh-progress-step:visible').count()!==8)throw Error('Full project steps missing');await page.locator('dialog').getByRole('button',{name:'关闭',exact:true}).click();
+await page.locator('.dwh-todo:not([hidden]) .dwh-todo__text').first().click();await page.locator('.dwh-todo__edit').fill('编辑中还没提交');await page.evaluate(()=>realPlugin.refreshHomeViews());if(await page.locator('.dwh-todo__edit').inputValue()!=='编辑中还没提交')throw Error('Inline edit interrupted');await page.locator('.dwh-todo__edit').press('Enter');await page.waitForTimeout(100);if(await page.locator('.dwh-todo__edit').count())throw Error('Inline save failed');
+for(const viewport of [{width:1600,height:900},{width:1200,height:800},{width:1000,height:700}]){
+ await page.setViewportSize(viewport);await page.waitForTimeout(250);
+ const overflow=await page.locator('.dwh-home').evaluate(root=>({client:root.clientHeight,scroll:root.scrollHeight,panels:[...root.querySelectorAll('.dwh-panel')].map(p=>({height:p.clientHeight,scroll:p.scrollHeight,bottom:p.getBoundingClientRect().bottom}))}));
+ if(overflow.scroll>overflow.client+3||overflow.panels.some(p=>p.scroll>p.height+3))throw Error('Desktop overflow '+JSON.stringify({viewport,overflow}));
+}
+await page.setViewportSize({width:1600,height:900});await page.waitForTimeout(150);await page.screenshot({path:path.join(out,'首页-自动翻纸.png'),fullPage:true});
+await page.setViewportSize({width:640,height:1000});await page.waitForTimeout(150);if(await page.evaluate(()=>document.documentElement.scrollWidth>window.innerWidth))throw Error('home horizontal overflow');await page.screenshot({path:path.join(out,'首页-窄屏.png'),fullPage:true});await page.setViewportSize({width:1600,height:1100});
+await page.evaluate(async()=>{await realPlugin.setAppearance('mode','light');await realPlugin.activateJournal('日记/2026-10-06.md')});
+await page.setViewportSize({width:640,height:1000});await page.waitForTimeout(200);await page.screenshot({path:path.join(out,'日记页面-窄屏.png'),fullPage:true});
+if(await page.locator('.dwh-journal__sheet').count()!==5)throw Error('stack lost after view switch');
+const overflow=await page.evaluate(()=>document.documentElement.scrollWidth>window.innerWidth);if(overflow)throw Error('horizontal overflow');
+if(errors.length)throw Error(errors.join('\n'));
+fs.writeFileSync(path.join(out,'browser-checks.json'),JSON.stringify({passed:true,errors,checks:['six diary fields','manual weather autosave','stack navigation','previous/next','dark paper colors','homepage slider drag','keyboard adjustment','exactly two complete themes','preference persistence','homepage and journal narrow screen']},null,2));
+console.log('Browser checks passed');await browser.close();
+})().catch(e=>{console.error(e);process.exit(1)});

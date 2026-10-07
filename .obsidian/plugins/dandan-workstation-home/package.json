@@ -1,23 +1,11 @@
 {
   "name": "dandan-workstation-home",
-  "version": "0.3.0",
-  "description": "简约个人工作站：首页灵感与待办排序、日记日历、每日属性模板和每周回顾。",
+  "version": "0.4.0",
+  "description": "纸面风格的个人工作台：灵感、待办、工作进展、自动翻纸首页与六项日记，支持白色和黑色主题。",
   "main": "main.js",
-  "scripts": {
-    "typecheck": "tsc --noEmit",
-    "build": "node esbuild.config.mjs"
-  },
-  "keywords": [
-    "obsidian",
-    "homepage",
-    "workstation"
-  ],
-  "author": "蛋蛋世界观",
   "license": "MIT",
-  "devDependencies": {
-    "obsidian": "^1.7.2",
-    "esbuild": "^0.23.1",
-    "typescript": "^5.5.4",
-    "builtin-modules": "^4.0.0"
+  "scripts": {
+    "build": "node build-paper-journal.cjs",
+    "check": "node --check main.js"
   }
 }

@@ -1,0 +1,93 @@
+/* 纸面工作台：保留既有交互，仅统一纸张、排版与日记入口。 */
+body:has(.dwh-home) .dwh-home {
+  padding: 26px clamp(22px,4vw,60px) 48px !important;
+  font-family: Georgia,"Noto Serif SC","Songti SC","SimSun",serif;
+}
+body:has(.dwh-home) .dwh-home__hero { align-items: center !important; margin-bottom: 28px !important; padding-bottom: 18px !important; border-bottom: 1px solid var(--jp-border); gap: 24px; }
+body:has(.dwh-home) .dwh-home__title { font-size: clamp(30px,3vw,42px); }
+body:has(.dwh-home) .dwh-home__eyebrow,
+body:has(.dwh-home) .dwh-home__date { display: none; }
+body:has(.dwh-home) .dwh-home__grid { gap: 28px !important; align-items: stretch !important; }
+body:has(.dwh-home) .dwh-panel {
+  position: relative; isolation: isolate; padding: 28px 32px !important;
+  border: 1px solid var(--jp-border) !important; border-radius: 4px !important;
+  background: var(--jp-paper) !important;
+  box-shadow: 0 5px 18px var(--jp-shadow) !important;
+  min-height: 310px;
+}
+body:has(.dwh-home) .dwh-panel::before,
+body:has(.dwh-home) .dwh-panel::after {
+  content: ''; position: absolute; pointer-events: none; inset: -6px 7px 7px -5px;
+  z-index: -1; border: 1px solid var(--jp-border); border-radius: 3px;
+  background: var(--jp-paper); transform: rotate(-.35deg);
+}
+body:has(.dwh-home) .dwh-panel::after { inset: 6px -6px -6px 6px; z-index: -2; transform: rotate(.25deg); }
+body:has(.dwh-home) .dwh-panel__header { padding-bottom: 14px; border-bottom: 1px solid var(--jp-border); margin-bottom: 18px; }
+body:has(.dwh-home) .dwh-panel__title { font-family: inherit; font-size: clamp(21px,2vw,28px); font-weight: 600; line-height: 1.3; letter-spacing: .02em; }
+body:has(.dwh-home) .dwh-inspiration > .dwh-panel__title { padding-bottom: 14px; border-bottom: 1px solid var(--jp-border); margin-bottom: 18px; }
+body:has(.dwh-home) .dwh-inspiration-card,
+body:has(.dwh-home) .dwh-todo,
+body:has(.dwh-home) .dwh-document-line {
+  background: transparent !important; border: 0 !important; border-bottom: 1px solid var(--jp-rule) !important;
+  border-radius: 0 !important; box-shadow: none !important; padding: 12px 0;
+}
+body:has(.dwh-home) .dwh-inspiration-card__text,
+body:has(.dwh-home) .dwh-todo__text { font-size: 17px; line-height: 1.8; }
+body:has(.dwh-home) .dwh-drag-handle { opacity: .35; }
+body:has(.dwh-home) .dwh-inspiration-card:hover .dwh-drag-handle,
+body:has(.dwh-home) .dwh-todo:hover .dwh-drag-handle { opacity: 1; }
+body:has(.dwh-home) .dwh-todo__check { width: 18px; height: 18px; }
+body:has(.dwh-home) .dwh-btn { border-radius: 4px; font-family: "Segoe UI","Microsoft YaHei",sans-serif; }
+body:has(.dwh-home) .dwh-inspiration__add { display: flex; align-items: end; gap: 12px; margin-top: 20px; }
+body:has(.dwh-home) .dwh-inspiration__input { flex: 1; min-width: 0; }
+body:has(.dwh-home) .dwh-inspiration__input,
+body:has(.dwh-home) .dwh-todo__input { border-radius: 4px; background: transparent; font-size: 14px; }
+body:has(.dwh-home) .dwh-inspiration-card__actions,
+body:has(.dwh-home) .dwh-todo__delete { opacity: .2; }
+body:has(.dwh-home) .dwh-inspiration-card:is(:hover,:focus-within) .dwh-inspiration-card__actions,
+body:has(.dwh-home) .dwh-todo:is(:hover,:focus-within) .dwh-todo__delete { opacity: 1; }
+body:has(.dwh-home) .dwh-progress-step__box,
+body:has(.dwh-home) .dwh-progress-empty,
+body:has(.dwh-home) .dwh-progress-add { background: transparent !important; border-radius: 3px !important; }
+body:has(.dwh-home) .dwh-progress-step::after { background: var(--jp-border); }
+body:has(.dwh-home) .dwh-progress-step { flex-basis: 155px; }
+body:has(.dwh-home) .dwh-progress-step__text { font-family: inherit; font-size: 15px; }
+body:has(.dwh-home) .dwh-home-diary-body { display: grid; grid-template-columns: minmax(0,1.1fr) minmax(0,.9fr); gap: 22px; align-items: start; }
+body:has(.dwh-home) .dwh-home-diary-body .dwh-diary__mini-cal { border-top: none; margin-top: 0; padding-top: 0; }
+body:has(.dwh-home) .dwh-home-journal-preview { position: relative; isolation: isolate; padding: 17px; border: 1px solid var(--jp-border); border-radius: 3px; background: var(--jp-paper); box-shadow: 0 4px 12px var(--jp-shadow); }
+body:has(.dwh-home) .dwh-home-journal-preview::before { content: ''; position: absolute; z-index: -1; inset: -5px 5px 5px -5px; border: 1px solid var(--jp-border); background: var(--jp-paper); transform: rotate(-1deg); pointer-events: none; }
+body:has(.dwh-home) .dwh-diary__today { border-bottom: 1px solid var(--jp-border); padding-bottom: 14px; gap: 10px; }
+body:has(.dwh-home) .dwh-diary__tday { font-size: 32px; font-family: inherit; }
+body:has(.dwh-home) .dwh-diary__write { margin-top: 8px; }
+body:has(.dwh-home) .dwh-home-journal-preview .dwh-diary__preview { background: transparent; padding: 12px 0 0; border: 0; }
+body:has(.dwh-home) .dwh-diary__pv-text { font-family: inherit; font-size: 14px; line-height: 1.9; -webkit-line-clamp: 4; }
+body:has(.dwh-home) .dwh-diary__pv-meta { font-size: 11px; }
+body:has(.dwh-home) .dwh-diary__grid { gap: 3px; }
+body:has(.dwh-home) .dwh-diary__cell { min-height: 29px; }
+body:has(.dwh-home) .dwh-diary__foot { border-top: 1px solid var(--jp-border); padding-top: 14px; margin-top: 20px; }
+.dwh-appearance--slider { min-width: 220px; display: flex; flex-direction: column; gap: 9px; z-index: 1; }
+.dwh-appearance__slider-row { display: flex; align-items: center; gap: 10px; font-family: "Segoe UI","Microsoft YaHei",sans-serif; font-size: 12px; color: var(--jp-muted); }
+.dwh-appearance__label { width: 28px; flex-shrink: 0; }
+.dwh-appearance__value { width: 62px; flex-shrink: 0; color: var(--jp-ink); }
+.dwh-appearance__range { width: 128px; height: 24px; margin: 0; cursor: ew-resize; accent-color: var(--jp-accent); touch-action: pan-y; }
+.dwh-appearance__range:focus-visible { outline: 1px solid var(--jp-accent); outline-offset: 3px; border-radius: 4px; }
+.dwh-appearance__segment { display: grid; grid-template-columns: repeat(2,1fr); position: relative; width: 180px; height: 34px; padding: 3px; border: 1px solid var(--jp-border); border-radius: 10px; background: var(--jp-soft); cursor: pointer; touch-action: pan-y; user-select: none; box-sizing: border-box; }
+.dwh-appearance__thumb { position: absolute; left: 3px; top: 3px; bottom: 3px; width: calc((100% - 6px) / 2); border-radius: 7px; background: var(--jp-paper); box-shadow: 0 2px 6px var(--jp-shadow),0 0 0 1px var(--jp-border); transition: transform 260ms cubic-bezier(.22,.8,.25,1), background-color 180ms; pointer-events: none; }
+.dwh-appearance__option { position: relative; display: flex; align-items: center; justify-content: center; color: var(--jp-muted); font-size: 12px; white-space: nowrap; transition: color 180ms; pointer-events: none; }
+.dwh-appearance__option.is-selected { color: var(--jp-ink); font-weight: 600; }
+.dwh-appearance__segment.is-dragging { cursor: grabbing; }
+.dwh-appearance__segment.is-dragging .dwh-appearance__thumb { transition: background-color 180ms; }
+.dwh-appearance__segment:focus-visible { outline: 2px solid var(--jp-accent); outline-offset: 3px; }
+.dwh-home, .dwh-journal, .dwh-panel, .dwh-journal__paper, .dwh-journal__sheet, .dwh-home-journal-preview, .dwh-panel::before, .dwh-panel::after, .dwh-journal__paper::before, .dwh-journal__paper::after { transition: background-color 180ms ease, color 180ms ease, border-color 180ms ease; }
+@media (prefers-reduced-motion: reduce) { .dwh-appearance__thumb, .dwh-appearance__option, .dwh-home, .dwh-journal, .dwh-panel, .dwh-journal__paper, .dwh-panel::before, .dwh-panel::after { transition: none !important; } }
+@media (max-width: 1100px) {
+  body:has(.dwh-home) .dwh-panel { padding: 22px !important; }
+  body:has(.dwh-home) .dwh-home-diary-body { grid-template-columns: minmax(0,1fr); }
+}
+@media (max-width: 760px) {
+  body:has(.dwh-home) .dwh-home__grid { grid-template-columns: minmax(0,1fr) !important; grid-template-areas: 'inspiration' 'todos' 'work' 'diary' !important; gap: 24px !important; }
+  body:has(.dwh-home) .dwh-home__hero { gap: 12px; flex-wrap: wrap; }
+  body:has(.dwh-home) .dwh-panel { min-height: 0; }
+  .dwh-journal__toolbar { flex-wrap: wrap; }
+  .dwh-journal__actions { margin-left: auto; }
+}
